@@ -76,7 +76,7 @@
 
 /* ── BASE ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: none; -moz-text-size-adjust: none; text-size-adjust: none; }
 body {
   font-family: var(--font-body);
   background: var(--bg);
@@ -197,6 +197,34 @@ header {
   color: var(--header-text);
   position: sticky; top: 0; z-index: 50;
   box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+}
+
+/* ══════════════════════════════════════════
+   UTILITIES & MODAL HELPERS
+══════════════════════════════════════════ */
+.u-mb-4 { margin-bottom: 4px; }
+.u-mb-12 { margin-bottom: 12px; }
+.u-mb-14 { margin-bottom: 14px; }
+.u-mt-10 { margin-top: 10px; }
+.u-max-w-160 { max-width: 160px !important; }
+.u-max-w-180 { max-width: 180px !important; }
+
+.modal-name-display {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent2);
+  margin-bottom: 14px;
+}
+.modal-err {
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+.modal-sub-p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 16px;
 }
 .hdr-inner {
   max-width: 1600px; margin: 0 auto;
@@ -382,6 +410,17 @@ tbody tr:hover td { background: var(--surface2); }
 .fine-cell input:disabled { opacity: .35; cursor: default; border-bottom-style: dashed; }
 
 /* ── ROW ACTIONS ── */
+.scan-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border2);
+  margin: 0 auto;
+  box-shadow: 0 0 0 3px var(--surface2);
+}
+.scan-dot.on {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
 .row-acts { display: flex; align-items: center; justify-content: center; gap: 5px; }
 .act { background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 5px 9px; cursor: pointer; font-size: 13px; color: var(--muted); transition: all var(--transition); white-space: nowrap; }
 .act:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); transform: translateY(-1px); }

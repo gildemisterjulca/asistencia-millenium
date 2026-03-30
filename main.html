@@ -101,8 +101,8 @@
           <option value="Pendiente">Pendientes</option>
           <option value="Permiso">Con permiso</option>
         </select>
-        <input type="date" id="fechaInp" class="inp" style="max-width:160px" aria-label="Seleccionar fecha">
-        <select id="histSel" class="inp" style="max-width:180px" aria-label="Seleccionar historial">
+        <input type="date" id="fechaInp" class="inp u-max-w-160" aria-label="Seleccionar fecha">
+        <select id="histSel" class="inp u-max-w-180" aria-label="Seleccionar historial">
           <option value="">— Historial —</option>
         </select>
         <div class="fine-ctrl">
@@ -135,6 +135,7 @@
                 <th>N°</th>
                 <th>Nombre</th>
                 <th>Teléfono</th>
+                <th class="c">SCAN</th>
                 <th class="c">Estado</th>
                 <th class="c">Multa</th>
                 <th class="c">QR</th>
@@ -231,8 +232,8 @@
     <div class="modal-hd"><h2>✏️ Editar padre</h2><button class="btn btn-ghost btn-sm" data-close="editModal">✕</button></div>
     <div class="modal-body">
       <input type="hidden" id="editId">
-      <div style="margin-bottom:12px"><label class="form-lbl" for="editNombre">Nombre completo</label><input type="text" class="inp" id="editNombre"></div>
-      <div style="margin-bottom:14px"><label class="form-lbl" for="editTelefono">Teléfono</label><input type="tel" class="inp" id="editTelefono"></div>
+      <div class="u-mb-12"><label class="form-lbl" for="editNombre">Nombre completo</label><input type="text" class="inp" id="editNombre"></div>
+      <div class="u-mb-14"><label class="form-lbl" for="editTelefono">Teléfono</label><input type="tel" class="inp" id="editTelefono"></div>
       <div class="modal-foot"><button class="btn btn-ghost" data-close="editModal">Cancelar</button><button class="btn btn-primary" id="saveEditBtn">💾 Guardar</button></div>
     </div>
   </div>
@@ -243,9 +244,9 @@
   <div class="modal-card">
     <div class="modal-hd"><h2>📝 Notas</h2><button class="btn btn-ghost btn-sm" data-close="notesModal">✕</button></div>
     <div class="modal-body">
-      <div id="notesName" style="font-size:15px;font-weight:700;color:var(--accent2);margin-bottom:14px"></div>
+      <div id="notesName" class="u-text-lg u-fw-700 u-color-accent2 u-mb-14"></div>
       <textarea class="inp" id="notesTxt" placeholder="Escribe una nota..." aria-label="Texto de la nota"></textarea>
-      <button class="btn btn-primary btn-sm" style="margin-top:10px" id="saveNoteBtn">💾 Guardar nota</button>
+      <button class="btn btn-primary btn-sm u-mt-10" id="saveNoteBtn">💾 Guardar nota</button>
       <hr class="form-sep">
       <div id="notesHist"></div>
     </div>
@@ -268,7 +269,7 @@
   <div class="modal-card">
     <div class="modal-hd"><h2>⚙️ Configuración Firebase</h2><button class="btn btn-ghost btn-sm" data-close="cfgModal">✕</button></div>
     <div class="modal-body">
-      <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Ingresa los datos de tu proyecto Firebase para sincronizar en la nube.</p>
+      <p class="u-color-muted u-text-md u-mb-16">Ingresa los datos de tu proyecto Firebase para sincronizar en la nube.</p>
       <div class="cfg-grid">
         <div><label class="form-lbl" for="cfg_key">API Key</label><input type="text" class="inp" id="cfg_key" placeholder="AIzaSy..."></div>
         <div><label class="form-lbl" for="cfg_pid">Project ID</label><input type="text" class="inp" id="cfg_pid" placeholder="mi-proyecto"></div>
@@ -277,7 +278,7 @@
         <div><label class="form-lbl" for="cfg_sender">Messaging Sender ID</label><input type="text" class="inp" id="cfg_sender"></div>
         <div><label class="form-lbl" for="cfg_app">App ID</label><input type="text" class="inp" id="cfg_app"></div>
       </div>
-      <div id="cfgErr" class="hidden" style="color:var(--red);font-size:12px;font-weight:600;margin-top:10px"></div>
+      <div id="cfgErr" class="hidden u-color-red u-text-sm u-fw-600 u-mt-10"></div>
       <div class="modal-foot"><button class="btn btn-ghost" data-close="cfgModal">Cancelar</button><button class="btn btn-primary" id="saveCfgBtn">🔗 Conectar</button></div>
     </div>
   </div>
@@ -288,7 +289,7 @@
   <div class="modal-card sm">
     <div class="modal-hd"><h2>Confirmar acción</h2><button class="btn btn-ghost btn-sm" data-close="confirmModal">✕</button></div>
     <div class="modal-body">
-      <p id="confirmMsg" style="color:var(--muted);font-size:14px;margin-bottom:4px"></p>
+      <p id="confirmMsg" class="u-color-muted u-mb-4"></p>
       <div class="modal-foot"><button class="btn btn-ghost" data-close="confirmModal">Cancelar</button><button class="btn btn-danger" id="confirmOk">Confirmar</button></div>
     </div>
   </div>
@@ -588,7 +589,7 @@ function renderStats(){
 function renderTable(){
   const fl=getFiltered();
   document.getElementById('tableMeta').textContent=`${fl.length} de ${S.padres.length} · ${fmtDate(S.date)}`;
-  if(!fl.length){document.getElementById('tbody').innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">Sin registros que mostrar.</td></tr>`;return}
+  if(!fl.length){document.getElementById('tbody').innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">Sin registros que mostrar.</td></tr>`;return}
   document.getElementById('tbody').innerHTML=fl.map((p,i)=>{
     const st=getSt(p.id,S.date),fine=getFine(st),ph=fmtPhone(p.telefono);
     const opts=['Asistió','Falta','Permiso','Asistio su mamá','Asistio su esposo','Pendiente'];
@@ -596,6 +597,7 @@ function renderTable(){
       <td class="row-num">${i+1}</td>
       <td><div class="row-name">${esc(p.nombre)}</div></td>
       <td><div class="row-phone">${esc(ph)}</div></td>
+      <td class="c"><div class="scan-dot ${st === 'Asistió' ? 'on' : ''}"></div></td>
       <td class="c">
         <select class="status-sel" data-pid="${p.id}" onchange="onStChange(this)">
           ${opts.map(o=>`<option value="${o}"${st===o?' selected':''}>${o}</option>`).join('')}
@@ -843,11 +845,20 @@ function startQR(){
       S.qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:220,height:220}},qr=>{
         const p=S.padres.find(x=>x.id===qr);
         if(p){
+          const st = getSt(p.id, S.date);
+          if (st === 'Asistió') {
+            document.getElementById('qrErr').textContent = `⚠️ ${p.nombre} ya registró su asistencia.`;
+            document.getElementById('qrErr').classList.remove('hidden');
+            if ('vibrate' in navigator) navigator.vibrate([100, 30, 100]);
+            return;
+          }
+
           if(!S.asistencias[S.date])S.asistencias[S.date]={};
           S.asistencias[S.date][p.id]='Asistió';
           persistAll();render();
           document.getElementById('qrOkName').textContent=p.nombre;
           document.getElementById('qrOk').classList.remove('hidden');
+          document.getElementById('qrErr').classList.add('hidden');
           notify(`✅ ${p.nombre} marcado como presente`,'success');
           stopQR();
         }else{document.getElementById('qrErr').textContent='QR no reconocido.';document.getElementById('qrErr').classList.remove('hidden')}
