@@ -436,7 +436,13 @@ tbody tr:hover td { background: var(--surface2); }
   animation: dropIn .13s ease;
 }
 .dropdown.open { display: block; }
+.dropdown.up {
+  top: auto;
+  bottom: calc(100% + 5px);
+  animation-name: dropUp;
+}
 @keyframes dropIn { from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none} }
+@keyframes dropUp { from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none} }
 .dd-item {
   display: flex; align-items: center; gap: 10px;
   padding: 11px 15px; cursor: pointer; border: none; background: transparent;
