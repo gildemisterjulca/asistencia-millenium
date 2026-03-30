@@ -909,41 +909,36 @@ function handleFile(file){
 }
 
 /* ── DROPDOWN ── */
-function toggleDD(pid){
-  const ddToggle = event.target;
+function toggleDD(pid) {
   const dropdown = document.getElementById(`dd_${pid}`);
   if (!dropdown) return;
+  const ddToggle = event.target;
 
-  // Close other dropdowns
+  const isAlreadyOpen = dropdown.classList.contains('open');
+
+  // First, close all dropdowns to ensure a clean state
   document.querySelectorAll('.dropdown.open').forEach(d => {
-    if (d !== dropdown) {
-      d.classList.remove('open', 'up');
-    }
+    d.classList.remove('open', 'up');
   });
 
-  // Check position and decide direction
-  if (!dropdown.classList.contains('open')) {
+  // If the clicked dropdown was not already open, then open it in the correct position.
+  if (!isAlreadyOpen) {
     const rect = ddToggle.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
-    // A rough estimate of dropdown height, since it's not visible yet.
-    const dropdownHeight = 160; 
-    const needsToOpenUp = spaceBelow < dropdownHeight;
+    const dropdownHeight = 160; // A reasonable estimate for its height
+    const spaceAbove = rect.top;
 
-    if (needsToOpenUp) {
+    // Open upwards if not enough space below, but enough space above
+    if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
       dropdown.classList.add('up');
-    } else {
-      dropdown.classList.remove('up');
-    }
-  }
+    } 
+    // The 'up' class is implicitly removed by the loop at the start if it was there.
 
-  dropdown.classList.toggle('open');
-
-  // Cleanup 'up' class if we just closed it
-  if (!dropdown.classList.contains('open')) {
-    dropdown.classList.remove('up');
+    dropdown.classList.add('open');
   }
+  // If it was already open, the loop at the start has already closed it, so we do nothing more.
 }
-function closeDD(pid){const d=document.getElementById(`dd_${pid}`);if(d)d.classList.remove('open')}
+function closeDD(pid){const d=document.getElementById(`dd_${pid}`);if(d)d.classList.remove('open', 'up')}
 
 /* ── FIREBASE CONFIG ── */
 function openCfg(){

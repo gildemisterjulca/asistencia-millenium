@@ -426,19 +426,21 @@ tbody tr:hover td { background: var(--surface2); }
 .act:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); transform: translateY(-1px); }
 
 /* ── DROPDOWN ── */
-.dd-wrap { position: relative; }
+.dd-wrap {
+  /* This is now just a simple wrapper, no positioning needed */
+}
 .dropdown {
-  position: absolute; right: 0; top: calc(100% + 5px);
+  position: fixed; /* Changed to fixed to escape table overflow */
   min-width: 185px; z-index: 30;
   background: var(--surface); border: 1px solid var(--border2);
   border-radius: 13px; box-shadow: var(--shadow-lg);
   overflow: hidden; display: none;
+  transform-origin: top right; /* Set transform origin for animations */
   animation: dropIn .13s ease;
 }
 .dropdown.open { display: block; }
 .dropdown.up {
-  top: auto;
-  bottom: calc(100% + 5px);
+  transform-origin: bottom right; /* Change origin when opening up */
   animation-name: dropUp;
 }
 @keyframes dropIn { from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none} }
