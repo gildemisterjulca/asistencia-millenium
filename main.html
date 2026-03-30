@@ -925,15 +925,21 @@ function toggleDD(pid) {
   if (!isAlreadyOpen) {
     const rect = ddToggle.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
-    const dropdownHeight = 160; // A reasonable estimate for its height
+    
+    // To measure height correctly, temporarily make it visible to get offsetHeight
+    dropdown.style.visibility = 'hidden';
+    dropdown.classList.add('open');
+    const dropdownHeight = dropdown.offsetHeight;
+    dropdown.classList.remove('open');
+    dropdown.style.visibility = '';
+
     const spaceAbove = rect.top;
 
     // Open upwards if not enough space below, but enough space above
     if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
       dropdown.classList.add('up');
     } 
-    // The 'up' class is implicitly removed by the loop at the start if it was there.
-
+    
     dropdown.classList.add('open');
   }
   // If it was already open, the loop at the start has already closed it, so we do nothing more.
