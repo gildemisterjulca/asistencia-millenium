@@ -76,7 +76,7 @@
 
 /* ── BASE ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: none; -moz-text-size-adjust: none; text-size-adjust: none; }
+html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
   background: var(--bg);
@@ -290,9 +290,9 @@ main { max-width: 1600px; margin: 0 auto; padding: 20px 20px 40px; }
 }
 .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--border2); }
 .stat-bar { position: absolute; inset: 0 auto 0 0; width: 3px; border-radius: 3px 0 0 3px; }
-.stat-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: 8px; padding-left: 6px; }
-.stat-val { font-family: var(--font-head); font-size: 34px; font-weight: 800; line-height: 1; padding-left: 6px; }
-.stat-sub { font-size: 11px; color: var(--muted); margin-top: 5px; padding-left: 6px; }
+.stat-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; padding-left: 6px; }
+.stat-val { font-family: var(--font-head); font-size: 34px; font-weight: 700; line-height: 1; padding-left: 6px; }
+.stat-sub { font-size: 12px; color: var(--muted); margin-top: 5px; padding-left: 6px; opacity: 0.8; }
 .stat-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 30px; opacity: .1; }
 
 /* ── BANNER ── */
@@ -388,6 +388,47 @@ tbody tr:hover td { background: var(--surface2); }
 }
 .status-sel:focus { outline: none; border-color: var(--accent); }
 
+
+
+/* --- Status Colors --- */
+.status-select.status-asistió,
+.status-select.status-asistio-su-mamá,
+.status-select.status-asistio-su-esposo {
+    color: var(--green-dark);
+    font-weight: 600;
+}
+
+.status-select.status-falta {
+    color: var(--red-dark);
+    font-weight: 600;
+}
+
+.status-select.status-permiso {
+    color: var(--blue-dark);
+    font-weight: 600;
+}
+
+.status-select.status-pendiente {
+    color: var(--orange-dark);
+    font-weight: 600;
+}
+.status-asistió .status-select,
+.status-asistio-su-mamá .status-select,
+.status-asistio-su-esposo .status-select {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.status-falta .status-select {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.status-pendiente .status-select {
+  color: var(--amber);
+  font-weight: 600;
+}
+
 /* ── BADGES ── */
 .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; background: currentColor; }
@@ -426,6 +467,9 @@ tbody tr:hover td { background: var(--surface2); }
 .act:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); transform: translateY(-1px); }
 
 /* ── DROPDOWN ── */
+.dd-wrap {
+  /* This is now just a simple wrapper, no positioning needed */
+}
 .dropdown {
   position: fixed; /* Changed to fixed to escape table overflow */
   min-width: 185px; z-index: 30;

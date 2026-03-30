@@ -611,13 +611,15 @@ function renderTable(){
       </div>
     `;
 
+    const statusClassMap={'Asistió':'b-green','Falta':'b-red','Pendiente':'b-amber','Permiso':'b-purple','Asistio su mamá':'b-cyan','Asistio su esposo':'b-cyan'};
+
     return`<tr>
       <td class="row-num">${i+1}</td>
       <td><div class="row-name">${esc(p.nombre)}</div></td>
       <td><div class="row-phone">${esc(ph)}</div></td>
       <td class="c"><div class="scan-dot ${st === 'Asistió' ? 'on' : ''}"></div></td>
       <td class="c">
-        <select class="status-sel" data-pid="${p.id}" onchange="onStChange(this)">
+        <select class="status-sel ${statusClassMap[st]||'b-amber'}" data-pid="${p.id}" onchange="onStChange(this)">
           ${opts.map(o=>`<option value="${o}"${st===o?' selected':''}>${o}</option>`).join('')}
         </select>
       </td>
@@ -732,6 +734,25 @@ function onStChange(sel){
   if(st==='Pendiente'){delete S.asistencias[d][pid];if(!Object.keys(S.asistencias[d]).length)delete S.asistencias[d]}
   else S.asistencias[d][pid]=st;
   persistAll();renderStats();renderCharts();renderHistSel();renderReports();renderAlerts();
+
+  // Update row UI dynamically as renderTable() is not called on change
+  const row = sel.closest('tr');
+  if (!row) return;
+
+  // Update scan dot
+  row.querySelector('.scan-dot')?.classList.toggle('on', st === 'Asistió');
+
+  // Update fine input
+  const fineInput = row.querySelector('input[type="number"][data-pid]');
+  if (fineInput) {
+    fineInput.disabled = (st !== 'Falta');
+    fineInput.value = getFine(st);
+  }
+
+  // Update select class for color
+  const statusClassMap={'Asistió':'b-green','Falta':'b-red','Pendiente':'b-amber','Permiso':'b-purple','Asistio su mamá':'b-cyan','Asistio su esposo':'b-cyan'};
+  sel.className = 'status-sel'; // Reset
+  if (statusClassMap[st]) sel.classList.add(statusClassMap[st]);
 }
 function onFineChange(){}
 
