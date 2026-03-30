@@ -426,13 +426,8 @@ tbody tr:hover td { background: var(--surface2); }
 .act:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); transform: translateY(-1px); }
 
 /* ── DROPDOWN ── */
-.dd-wrap {
-  /* This is now just a simple wrapper, no positioning needed */
-}
 .dropdown {
   position: fixed; /* Changed to fixed to escape table overflow */
-  top: 0;
-  right: 0;
   min-width: 185px; z-index: 30;
   background: var(--surface); border: 1px solid var(--border2);
   border-radius: 13px; box-shadow: var(--shadow-lg);

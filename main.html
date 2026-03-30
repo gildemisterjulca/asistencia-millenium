@@ -589,10 +589,28 @@ function renderStats(){
 function renderTable(){
   const fl=getFiltered();
   document.getElementById('tableMeta').textContent=`${fl.length} de ${S.padres.length} · ${fmtDate(S.date)}`;
+
+  // Limpiar dropdowns viejos y preparar para los nuevos
+  document.querySelectorAll('.dropdown[id^="dd_"]').forEach(d => d.remove());
+  let dropdownsHtml = '';
+
   if(!fl.length){document.getElementById('tbody').innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">Sin registros que mostrar.</td></tr>`;return}
+  
   document.getElementById('tbody').innerHTML=fl.map((p,i)=>{
     const st=getSt(p.id,S.date),fine=getFine(st),ph=fmtPhone(p.telefono);
     const opts=['Asistió','Falta','Permiso','Asistio su mamá','Asistio su esposo','Pendiente'];
+
+    // Acumular HTML del dropdown para agregarlo al body después
+    dropdownsHtml += `
+      <div class="dropdown" id="dd_${p.id}">
+        <button class="dd-item" onclick="openEdit('${p.id}');closeDD('${p.id}')"><span class="ico">✏️</span>Editar datos</button>
+        <button class="dd-item" onclick="openNotes('${p.id}');closeDD('${p.id}')"><span class="ico">📝</span>Notas</button>
+        <button class="dd-item" onclick="openHist('${p.id}');closeDD('${p.id}')"><span class="ico">📅</span>Historial</button>
+        <button class="dd-item" onclick="sendWA('${p.id}');closeDD('${p.id}')"><span class="ico">📱</span>Enviar WhatsApp</button>
+        <button class="dd-item red" onclick="deletePadre('${p.id}');closeDD('${p.id}')"><span class="ico">🗑️</span>Eliminar</button>
+      </div>
+    `;
+
     return`<tr>
       <td class="row-num">${i+1}</td>
       <td><div class="row-name">${esc(p.nombre)}</div></td>
@@ -615,18 +633,14 @@ function renderTable(){
           <button class="act" onclick="sendWA('${p.id}')" title="WhatsApp">📱</button>
           <div class="dd-wrap" id="ddw_${p.id}">
             <button class="act" onclick="toggleDD('${p.id}')">⋯</button>
-            <div class="dropdown" id="dd_${p.id}">
-              <button class="dd-item" onclick="openEdit('${p.id}');closeDD('${p.id}')"><span class="ico">✏️</span>Editar datos</button>
-              <button class="dd-item" onclick="openNotes('${p.id}');closeDD('${p.id}')"><span class="ico">📝</span>Notas</button>
-              <button class="dd-item" onclick="openHist('${p.id}');closeDD('${p.id}')"><span class="ico">📅</span>Historial</button>
-              <button class="dd-item" onclick="sendWA('${p.id}');closeDD('${p.id}')"><span class="ico">📱</span>Enviar WhatsApp</button>
-              <button class="dd-item red" onclick="deletePadre('${p.id}');closeDD('${p.id}')"><span class="ico">🗑️</span>Eliminar</button>
-            </div>
           </div>
         </div>
       </td>
     </tr>`;
   }).join('');
+
+  // Agregar todos los dropdowns al body
+  document.body.insertAdjacentHTML('beforeend', dropdownsHtml);
 }
 
 function renderCharts(){
@@ -915,17 +929,56 @@ function toggleDD(pid) {
 
   const isAlreadyOpen = dropdown.classList.contains('open');
 
-  // Close all open dropdowns first
+  // Close all other open dropdowns
   document.querySelectorAll('.dropdown.open').forEach(d => {
-    d.classList.remove('open', 'up');
+    if (d.id !== `dd_${pid}`) {
+      d.classList.remove('open');
+      d.style.top = '-9999px';
+      d.style.left = '-9999px';
+    }
   });
 
-  // If the clicked one wasn't open, open it.
-  if (!isAlreadyOpen) {
+  // Toggle the current dropdown
+  if (isAlreadyOpen) {
+    dropdown.classList.remove('open');
+    dropdown.style.top = '-9999px';
+    dropdown.style.left = '-9999px';
+  } else {
+    const btn = document.querySelector(`#ddw_${pid} > button`);
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+
+    dropdown.style.visibility = 'hidden';
+    dropdown.classList.add('open');
+    const ddHeight = dropdown.offsetHeight;
+    const ddWidth = dropdown.offsetWidth;
+    dropdown.classList.remove('open');
+    dropdown.style.visibility = '';
+
+    let top, left = rect.left + rect.width / 2 - ddWidth / 2;
+
+    if (window.innerHeight - rect.bottom < ddHeight && rect.top > ddHeight) {
+      top = rect.top - ddHeight - 4;
+    } else {
+      top = rect.bottom + 4;
+    }
+
+    if (left < 8) left = 8;
+    if (left + ddWidth > window.innerWidth - 8) left = window.innerWidth - ddWidth - 8;
+
+    dropdown.style.top = `${top}px`;
+    dropdown.style.left = `${left}px`;
     dropdown.classList.add('open');
   }
 }
-function closeDD(pid){const d=document.getElementById(`dd_${pid}`);if(d)d.classList.remove('open', 'up')}
+function closeDD(pid){
+  const d=document.getElementById(`dd_${pid}`);
+  if(d) {
+    d.classList.remove('open');
+    d.style.top = '-9999px';
+    d.style.left = '-9999px';
+  }
+}
 
 /* ── FIREBASE CONFIG ── */
 function openCfg(){
@@ -966,7 +1019,7 @@ document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.close)));
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.open').forEach(m=>closeModal(m.id));document.querySelectorAll('.dropdown.open').forEach(d=>d.classList.remove('open'))}});
-document.addEventListener('click',e=>{if(!e.target.closest('.dd-wrap'))document.querySelectorAll('.dropdown.open').forEach(d=>d.classList.remove('open'))});
+document.addEventListener('click',e=>{if(!e.target.closest('.dd-wrap') && !e.target.closest('.dropdown'))document.querySelectorAll('.dropdown.open').forEach(d=>{d.classList.remove('open');d.style.top='-9999px';d.style.left='-9999px'})});
 
 document.getElementById('searchInp').addEventListener('input',e=>{S.filterTxt=e.target.value;renderTable()});
 document.getElementById('filterSt').addEventListener('change',e=>{S.filterSt=e.target.value;renderTable()});
