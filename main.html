@@ -912,37 +912,18 @@ function handleFile(file){
 function toggleDD(pid) {
   const dropdown = document.getElementById(`dd_${pid}`);
   if (!dropdown) return;
-  const ddToggle = event.target;
 
   const isAlreadyOpen = dropdown.classList.contains('open');
 
-  // First, close all dropdowns to ensure a clean state
+  // Close all open dropdowns first
   document.querySelectorAll('.dropdown.open').forEach(d => {
     d.classList.remove('open', 'up');
   });
 
-  // If the clicked dropdown was not already open, then open it in the correct position.
+  // If the clicked one wasn't open, open it.
   if (!isAlreadyOpen) {
-    const rect = ddToggle.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    
-    // To measure height correctly, temporarily make it visible to get offsetHeight
-    dropdown.style.visibility = 'hidden';
-    dropdown.classList.add('open');
-    const dropdownHeight = dropdown.offsetHeight;
-    dropdown.classList.remove('open');
-    dropdown.style.visibility = '';
-
-    const spaceAbove = rect.top;
-
-    // Open upwards if not enough space below, but enough space above
-    if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
-      dropdown.classList.add('up');
-    } 
-    
     dropdown.classList.add('open');
   }
-  // If it was already open, the loop at the start has already closed it, so we do nothing more.
 }
 function closeDD(pid){const d=document.getElementById(`dd_${pid}`);if(d)d.classList.remove('open', 'up')}
 

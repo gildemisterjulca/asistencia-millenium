@@ -431,6 +431,8 @@ tbody tr:hover td { background: var(--surface2); }
 }
 .dropdown {
   position: fixed; /* Changed to fixed to escape table overflow */
+  top: 0;
+  right: 0;
   min-width: 185px; z-index: 30;
   background: var(--surface); border: 1px solid var(--border2);
   border-radius: 13px; box-shadow: var(--shadow-lg);
