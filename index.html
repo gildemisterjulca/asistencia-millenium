@@ -477,14 +477,29 @@ async function saveToFB(path,data){
 
 async function loadFromFB(){
   if(!S.firebase||!S.fbOk)return;
+  console.log('Intentando cargar datos desde Firebase...');
   try{
     const {getFirestore,doc,getDoc}=window._fb;const db=getFirestore(S.firebase);
     const [p,a,n]=await Promise.all([getDoc(doc(db,'padres','data')),getDoc(doc(db,'asistencias','data')),getDoc(doc(db,'notas','data'))]);
-    if(p.exists())S.padres=p.data().list||[];
-    if(a.exists())S.asistencias=a.data().map||{};
-    if(n.exists())S.notas=n.data().map||{};
-    saveLocal();setSyncStatus(true);notify('Sincronizado con Firebase ✓');render();
-  } catch(e){console.error(e);setSyncStatus(false)}
+    
+    if (p.exists() || a.exists() || n.exists()) {
+      console.log('¡Documentos encontrados en Firebase! Cargando datos...');
+      if(p.exists())S.padres=p.data().list||[];
+      if(a.exists())S.asistencias=a.data().map||{};
+      if(n.exists())S.notas=n.data().map||{};
+    } else {
+      console.warn('No se encontró ningún documento de datos en Firebase. Se usarán los datos locales si existen.');
+    }
+
+    saveLocal(); // Guardar en local lo que se cargó de la nube
+    setSyncStatus(true);
+    notify('☁️ Datos sincronizados desde la nube.', 'info');
+    render();     // Forzar la actualización de la pantalla
+  } catch(e){
+    console.error('ERROR AL CARGAR DATOS DESDE FIREBASE:', e);
+    setSyncStatus(false);
+    notify('Error al sincronizar datos desde la nube.', 'error');
+  }
 }
 
 
